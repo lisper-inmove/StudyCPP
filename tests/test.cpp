@@ -1,13 +1,17 @@
+#include <iostream>
 #include <gtest/gtest.h>
-#include "math_utils.h"
 
+#include "math_utils.h"
 #include "ilog/logger.h"
 #include "ilog/log_format.h"
 #include "ilog/log_output.h"
 #include "ilog/log_factory.h"
+#include "poco_test.h"
+
+using namespace std;
 
 TEST(MathTest, AddPositive1) {
-    EXPECT_EQ(add(2, 3), 5);
+    EXPECT_EQ(add(2, 3), 4);
 }
 
 TEST(MathTest, AddNegative) {
@@ -29,4 +33,10 @@ TEST(LOGGER, Logger)
 	INFO("This is a INFO message");
 	ERROR("This is a ERROR message");
 	FATAL("This is a FATAL message");
+}
+
+TEST(POCOTEST, Now)
+{
+	auto now = Now();
+	cout << now.millisecond() << endl;
 }

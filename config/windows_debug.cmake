@@ -17,4 +17,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${VLD_ROOT}/lib/Win64/vld.lib")
 target_include_directories(${PROJECT_NAME} PRIVATE "${SPD_ROOT}/include")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${SPD_ROOT}/build/Debug/spdlogd.lib")
 
+# ---------------- POCO ----------------
+target_include_directories(${PROJECT_NAME} PRIVATE  "${POCO_ROOT}/include")
+file(GLOB_RECURSE POCO_LIBS "${POCO_ROOT}/lib/*.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE ${POCO_LIBS})
+file(GLOB_RECURSE POCO_DLLS "${POCO_ROOT}/bin/*.dll")
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${POCO_DLLS}
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>
+)
+
 include(config/googletest_debug.cmake)

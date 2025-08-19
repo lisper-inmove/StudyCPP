@@ -1,5 +1,4 @@
 enable_testing()
-add_subdirectory(googletest)
 
 set(TEST_NAME "tester")
 set(GTEST_ROOT "D:/code/cpplibs/googletest")
