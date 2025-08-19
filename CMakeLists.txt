@@ -1,29 +1,36 @@
-cmake_minimum_required(VERSION 3.14)
+﻿cmake_minimum_required(VERSION 3.14)
 project(StudyCPP)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-# 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 包含头文件路径
-include_directories(include /usr/local/include)
-
-# 查找 OpenCV
-find_package(OpenCV REQUIRED)
-
-# 包含头文件路径
-include_directories(
-    include
-    ${OpenCV_INCLUDE_DIRS}
-)
+# target_compile_options(${PROJECT_NAME} PRIVATE "/utf-8")
+add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 # 添加源文件
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 
-# 生成可执行文件
-add_executable(${PROJECT_NAME} ${SOURCES})
+# 创建可执行文件
+add_executable(${PROJECT_NAME} ${SOURCES} "src/main.cc")
 
-# 链接 OpenCV 库
-target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+if(WIN32)
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    include(config/windows_debug.cmake)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    include(config/windows_release.cmake)
+  endif()
+endif()
+
+# 项目头文件
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+# ---------------------- OpenCV --------------------------
+target_include_directories(${PROJECT_NAME} PRIVATE "${OPENCV_ROOT}/include")
+file(GLOB OPENCV_LIBS CONFIGURE_DEPENDS "${OPENCV_ROOT}/lib/*.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENCV_LIBS})
+
+# ---------------- POCO ----------------
+target_include_directories(${PROJECT_NAME} PRIVATE  "${POCO_ROOT}/include")
+file(GLOB_RECURSE POCO_LIBS "${POCO_ROOT}/lib/*.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE ${POCO_LIBS})
