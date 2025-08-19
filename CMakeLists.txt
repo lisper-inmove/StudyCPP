@@ -20,6 +20,12 @@ if(WIN32)
   elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     include(config/windows_release.cmake)
   endif()
+elseif(UNIX)
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    include(config/linux_debug.cmake)
+  elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    include(config/linux_release.cmake)
+  endif()
 endif()
 
 # 项目头文件
