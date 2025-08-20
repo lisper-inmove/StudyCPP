@@ -29,4 +29,4 @@ add_custom_command(
             $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
-include(config/googletest_debug.cmake)
+include(config/windows/googletest.cmake)

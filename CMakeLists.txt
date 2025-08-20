@@ -16,27 +16,26 @@ add_executable(${PROJECT_NAME} ${SOURCES} "src/main.cc")
 
 if(WIN32)
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    include(config/windows_debug.cmake)
+    include(config/windows/debug.cmake)
   elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    include(config/windows_release.cmake)
+    include(config/windows/release.cmake)
   endif()
+  # ---------------------- OpenCV --------------------------
+  target_include_directories(${PROJECT_NAME} PRIVATE "${OPENCV_ROOT}/include")
+  file(GLOB OPENCV_LIBS CONFIGURE_DEPENDS "${OPENCV_ROOT}/lib/*.lib")
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENCV_LIBS})
+
+  # ---------------- POCO ----------------
+  target_include_directories(${PROJECT_NAME} PRIVATE  "${POCO_ROOT}/include")
+  file(GLOB_RECURSE POCO_LIBS "${POCO_ROOT}/lib/*.lib")
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${POCO_LIBS})
 elseif(UNIX)
   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    include(config/linux_debug.cmake)
+    include(config/linux/debug.cmake)
   elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    include(config/linux_release.cmake)
+    include(config/linux/release.cmake)
   endif()
 endif()
 
 # 项目头文件
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
-# ---------------------- OpenCV --------------------------
-target_include_directories(${PROJECT_NAME} PRIVATE "${OPENCV_ROOT}/include")
-file(GLOB OPENCV_LIBS CONFIGURE_DEPENDS "${OPENCV_ROOT}/lib/*.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OPENCV_LIBS})
-
-# ---------------- POCO ----------------
-target_include_directories(${PROJECT_NAME} PRIVATE  "${POCO_ROOT}/include")
-file(GLOB_RECURSE POCO_LIBS "${POCO_ROOT}/lib/*.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE ${POCO_LIBS})
